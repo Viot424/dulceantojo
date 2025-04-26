@@ -12,11 +12,10 @@
             font-family: 'Fredoka One', cursive;
             color: #4d2c57;
             position: relative;
-            background-color: #f0d9ff; /* Fondo morado claro */
+            background-color: #f0d9ff;
             min-height: 100vh;
         }
         
-        /* Fondo de fresas superpuesto */
         body::before {
             content: "";
             background-image: url('pfresas.png');
@@ -120,6 +119,73 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
+        /* Galería con efectos de scroll */
+        .gallery-section {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 15px;
+            overflow: hidden;
+        }
+        
+        .gallery-title {
+            text-align: center;
+            color: #b565a7;
+            font-size: 2em;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .gallery-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03) translateY(0);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(181, 101, 167, 0.8);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
         /* Media queries para tablets y desktop */
         @media (min-width: 768px) {
             header {
@@ -151,6 +217,21 @@
             
             .logo {
                 width: 600px;
+            }
+            
+            /* Galería para desktop */
+            .gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            
+            .gallery-item img {
+                height: 250px;
+            }
+            
+            .gallery-caption {
+                font-size: 1em;
+                padding: 15px;
             }
         }
     </style>
@@ -238,9 +319,66 @@
     </div>
 </section>
 
+<!-- Sección de Galería de Productos -->
+<section class="gallery-section">
+    <h2 class="gallery-title">Nuestros Productos</h2>
+    <div class="gallery-grid">
+        <div class="gallery-item">
+            <img src="1.jpeg" alt="Frappé de Chocolate">
+            <div class="gallery-caption">Frappé de Chocolate</div>
+        </div>
+        <div class="gallery-item">
+            <img src="2.jpeg" alt="Frappe Oreo">
+            <div class="gallery-caption">Frappe Oreo</div>
+        </div>
+        <div class="gallery-item">
+            <img src="3.jpeg" alt="Frappe de Fresa">
+            <div class="gallery-caption">Frappe de Fresa</div>
+        </div>
+        <div class="gallery-item">
+            <img src="4.jpeg" alt="Frappe de Mazapán">
+            <div class="gallery-caption">Frappe de Mazapán</div>
+        </div>
+    </div>
+</section>
+
 <footer>
     © 2025 Dulce Antojo. Todos los derechos reservados.
 </footer>
+
+<script>
+    // Función para animar elementos al hacer scroll
+    function animateOnScroll() {
+        const galleryTitle = document.querySelector('.gallery-title');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        // Función para verificar si un elemento está en el viewport
+        function isInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75
+            );
+        }
+        
+        // Verificar título
+        if (isInViewport(galleryTitle)) {
+            galleryTitle.classList.add('visible');
+        }
+        
+        // Verificar cada ítem de la galería con un pequeño retraso entre ellos
+        galleryItems.forEach((item, index) => {
+            if (isInViewport(item)) {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, 150 * index); // Retraso progresivo para efecto escalonado
+            }
+        });
+    }
+    
+    // Ejecutar al cargar y al hacer scroll
+    window.addEventListener('load', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+</script>
 
 </body>
 </html>
